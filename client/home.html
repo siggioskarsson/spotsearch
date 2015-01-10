@@ -1,0 +1,171 @@
+<head>
+  <title>SpotSearch</title>
+</head>
+
+<body>
+	<a href="https://github.com/siggioskarsson/spotsearch"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 999999" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
+	<div class="container">
+		{{> searchbox}}
+		{{> results}}
+	</div>
+</body>
+
+<template name="searchbox">
+	<div class="row">
+		<div class="col-md-12">
+			<h2>
+				<img src="/img/spotify.png" style="height: 43px" />
+				<i class="glyphicon glyphicon-search"></i> - 
+				SpotSearch
+				<span class="pull-right">
+					<i class="glyphicon glyphicon-info-sign info"></i>
+				</span>
+			</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="input-group input-sm">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+				<input type="text" class="form-control artist" name="artist" placeholder="Artist">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="input-group input-sm">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-music"></i></span>
+				<input type="text" class="form-control album" name="album" placeholder="Album">
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="results">
+	<div class="row">
+		{{#if $.Session.get 'showInfo'}}
+			{{> info}}
+		{{else}}
+			<div class="col-md-6" id="artist">
+				<h2>Artist</h2>
+				{{#with selected_artist}}
+					{{> artist_list}}
+				{{/with}}
+				{{#with artists}}
+					{{> artist_list}}
+				{{/with}}
+				{{#with albums}}
+					<h2>Albums</h2>
+					{{> album_list}}
+				{{/with}}
+			</div>
+			<div class="col-md-6" id="tracks">
+				{{#with tracks}}
+					<h2>Tracks</h2>
+					{{> track_list}}
+				{{/with}}
+			</div>
+		{{/if}}
+	</div>
+</template>
+
+<template name="info">
+	<h1>SpotSearch</h1>
+	<div class="jumbotron">
+		<p>SpotSearch is a simple application to search through the Spotify catalogue</p>
+		<p>Please note that all searches done with this app are coming form your IP address and will be logged by Spotify</p>
+		<p>SpotSearch takes no responsibility for the correctness if the information shown on this page</p>
+		<p>This project is open source and in the public domain. See <a href="https://github.com/siggioskarsson/spotsearch">https://github.com/siggioskarsson/spotsearch</a> for the code</p>
+	</div>
+</template>
+
+<template name="artist_list">
+	<ul class="list-group">
+	{{#each items}}
+		<li class="list-group-item artist" id="{{id}}">
+			<div class="media">
+				<a class="media-left" href="#">
+					{{#with image}}
+						<img src="{{url}}" />
+					{{/with}}
+				</a>
+			<div class="media-body">
+				<h4 class="media-heading">{{name}}</h4>
+					{{#each genres}}
+						<span class="label label-primary">{{this}}</span>
+					{{/each}}
+				</div>
+			</div>			
+		</li>
+	{{/each}}
+	</ul>
+</template>
+
+<template name="album_list">
+	<ul class="list-group">
+	{{#each items}}
+		<li class="list-group-item artist_album {{active}}" id="{{id}}">
+			<div class="media">
+				{{#with album_details}}
+					<span class="badge pull-right">{{popularity}}</span>
+				{{/with}}
+				<a class="media-left" href="#">
+					{{#with image}}
+						<img src="{{url}}" />
+					{{/with}}
+				</a>
+				<div class="media-body">
+					<h4 class="media-heading">{{name}}{{release_year}}</h4>
+					<span class="text-muted">id: {{id}}</span><br/>
+					{{#each genres}}
+						<span class="label label-primary">{{this}}</span>
+					{{/each}}
+					{{#with album_details}}
+						{{#each artists}}
+							<span class="label label-warning">{{name}}</span>
+						{{/each}}
+						<br/>
+						{{#each external_ids}}
+							{{key}}: {{id}}
+						{{/each}}
+					{{/with}}
+				</div>
+			</div>			
+		</li>
+	{{/each}}
+	</ul>
+</template>
+
+<template name="track_list">
+	<ul class="list-group">
+	{{#each items}}
+		<li class="list-group-item track" id="{{id}}">
+			<div class="media">
+				{{#with track_details}}
+					<span class="badge pull-right" title="Popularity {{popularity}}">{{popularity}}</span>
+				{{/with}}
+				<a class="media-left" href="#">
+					{{#with image}}
+				        <div class="track-image">
+					        <img src="{{url}}" alt="" class="track-image-img">
+				           	<span class="track-number">{{../track_number}}</span>
+				           	<span class="track-number track-number-playing" style="visibility: hidden"><i class="glyphicon glyphicon-play"></i></span>
+					    </div>
+					{{/with}}
+				</a>
+			<div class="media-body">
+				<h4 class="media-heading">{{name}}</h4>
+				<span class="text-muted">id: {{id}}</span><br/>
+				{{#with track_details}}
+					{{#each artists}}
+						<span class="label label-warning">{{name}}</span>
+					{{/each}}
+					<br/>
+					{{#each external_ids}}
+						{{key}}: {{id}}
+					{{/each}}
+				{{/with}}
+				</div>
+			</div>			
+		</li>
+	{{/each}}
+	</ul>
+</template>
