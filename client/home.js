@@ -9,6 +9,22 @@ Template.searchbox.events({
       Session.set('showInfo', true);
     }
   },
+  "focus .search": function(e) {
+    Session.set('compact_results', true);
+    Session.set('search_results_show', true);
+  },
+  "blur .search": function(e) {
+    Meteor.setTimeout(function() {
+      Session.set('search_results_show', false);
+      Session.set('compact_results', false);
+    },200);
+  },
+  "keyup .search": function(e) {
+      $.get("https://api.spotify.com/v1/search?q=" + $('.search').val() + "&type=artist,album&limit=10", {}, function (data) {
+          //console.log(data);
+          Session.set('search_results', data);
+      });
+  },
   "keyup .artist": function(e) {
     if (e.keyCode == 13) {
       // https://api.spotify.com/v1/search?q=tania%20bowra&type=artist
@@ -37,27 +53,19 @@ Template.searchbox.events({
   }
 });
 
-Template.results.helpers({
-  selected_artist: function() {
-    return Session.get('selected_artist');
-  },
-  artists: function() {
-    return Session.get('artists');
-  },
-  albums: function() {
-    return Session.get('albums');
-  },
-  tracks: function() {
-    return Session.get('tracks');
-  }
-});
-
 Template.artist_list.events({
   "click .artist": function(e) {
     e.preventDefault();
     // console.log(e, e.currentTarget.id);
     var id = e.currentTarget.id;
     var artists = Session.get('artists');
+    if (!artists) {
+      // check whether we are in the search box
+      var search_results = Session.get('search_results');
+      if (search_results.artists) {
+        artists = search_results.artists;
+      }
+    }
     if (id && artists && artists.items) {
       _.each(artists.items, function(artist) {
           if (artist.id === id) {
@@ -70,6 +78,7 @@ Template.artist_list.events({
         //console.log(data);
         Session.set('artists');
         Session.set('albums', data);
+        Session.set('selected_album');
         Session.set('tracks');
     });
   }
@@ -95,6 +104,23 @@ Template.album_list.events({
     // console.log(e, e.currentTarget.id);
     var id = e.currentTarget.id;
     Session.set('album_selected', id);
+    var albums = Session.get('albums');
+    if (!albums || Session.get('compact_results')) {
+      // check whether we are in the search box
+      var search_results = Session.get('search_results');
+      if (search_results.albums) {
+        Session.set('albums', search_results.albums);
+        Session.set('artists');
+        Session.set('selected_artist');
+      }
+    }
+    if (id && albums && albums.items) {
+      _.each(albums.items, function(album) {
+          if (album.id === id) {
+            Session.set('selected_album', {items: [album]});
+          }
+      });
+    }
     // https://api.spotify.com/v1/artists/{id}/albums
     $.get("https://api.spotify.com/v1/albums/" + id + "/tracks", {}, function (data) {
         //console.log(data);

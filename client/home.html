@@ -12,7 +12,7 @@
 
 <template name="searchbox">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-6">
 			<h2>
 				<img src="/img/spotify.png" style="height: 43px" />
 				<i class="glyphicon glyphicon-search"></i> - 
@@ -21,6 +21,17 @@
 					<i class="glyphicon glyphicon-info-sign info"></i>
 				</span>
 			</h2>
+		</div>
+		<div class="col-md-4">
+			<div class="input-group input-sm">
+				<span class="input-group-addon"><img src="/img/spotify.png" style="height: 20px" /></span>
+				<input type="text" class="form-control search" name="artist" placeholder="Search - experimental">
+			</div>
+			{{#if $.Session.get 'search_results_show'}}
+				<div class="search_results_show">
+					{{> search_results}}
+				</div>
+			{{/if}}
 		</div>
 	</div>
 	<div class="row">
@@ -39,27 +50,52 @@
 	</div>
 </template>
 
+<template name="search_results">
+	{{#with $.Session.get 'search_results'}}
+		<div class="row">
+			<div class="col-md-6">
+				<h4>Artists</h4>
+				{{#with artists}}
+					{{> artist_list}}
+				{{/with}}
+			</div>
+			<div class="col-md-6">
+				<h4>Albums</h4>
+				{{#with albums}}
+					{{> album_list}}
+				{{/with}}
+			</div>
+		</div>
+	{{else}}
+		<h3><i>Start typing to get immediate results  ...</i></h3>
+	{{/with}}
+</template>
+
 <template name="results">
 	<div class="row">
 		{{#if $.Session.get 'showInfo'}}
 			{{> info}}
 		{{else}}
 			<div class="col-md-6" id="artist">
-				{{#with selected_artist}}
+				{{#with $.Session.get 'selected_artist'}}
 					<h2>Artist</h2>
 					{{> artist_list}}
 				{{/with}}
-				{{#with artists}}
+				{{#with $.Session.get 'artists'}}
 					<h2>Artists</h2>
 					{{> artist_list}}
 				{{/with}}
-				{{#with albums}}
+				{{#with $.Session.get 'albums'}}
 					<h2>Albums</h2>
 					{{> album_list}}
 				{{/with}}
 			</div>
 			<div class="col-md-6" id="tracks">
-				{{#with tracks}}
+				{{#with $.Session.get 'selected_album'}}
+					<h2>Album</h2>
+					{{> album_list}}
+				{{/with}}
+				{{#with $.Session.get 'tracks'}}
 					<h2>Tracks</h2>
 					{{> track_list}}
 				{{/with}}
@@ -71,7 +107,7 @@
 <template name="info">
 	<h1>SpotSearch info</h1>
 	<div class="jumbotron">
-		<p>SpotSearch is a simple application to search through the Spotify catalogue.</p>
+		<p>SpotSearch is a simple application to search through the Spotify catalogue, powered by meteor.</p>
 		<p>Please note that all searches done with this app are coming form your IP address and will be logged by Spotify.</p>
 		<p>SpotSearch takes no responsibility for the correctness if the information shown on this page.</p>
 		<p>This project is open source and in the public domain. See <a href="https://github.com/siggioskarsson/spotsearch">https://github.com/siggioskarsson/spotsearch</a> for the code.</p>
@@ -115,19 +151,21 @@
 				</a>
 				<div class="media-body">
 					<h4 class="media-heading">{{name}}{{release_year}}</h4>
-					<span class="text-muted">id: {{id}}</span><br/>
-					{{#each genres}}
-						<span class="label label-primary">{{this}}</span>
-					{{/each}}
-					{{#with album_details}}
-						{{#each artists}}
-							<span class="label label-warning">{{name}}</span>
+					<div class="album_details">
+						<span class="text-muted">id: {{id}}</span><br/>
+						{{#each genres}}
+							<span class="label label-primary">{{this}}</span>
 						{{/each}}
-						<br/>
-						{{#each external_ids}}
-							{{key}}: {{id}}
-						{{/each}}
-					{{/with}}
+						{{#with album_details}}
+							{{#each artists}}
+								<span class="label label-warning">{{name}}</span>
+							{{/each}}
+							<br/>
+							{{#each external_ids}}
+								{{key}}: {{id}}
+							{{/each}}
+						{{/with}}
+					</div>
 				</div>
 			</div>			
 		</li>
