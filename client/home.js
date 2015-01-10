@@ -68,7 +68,7 @@ var searchArtist = function(id) {
   if (!artists) {
     // check whether we are in the search box
     var search_results = Session.get('search_results');
-    if (search_results.artists) {
+    if (search_results && search_results.artists) {
       artists = search_results.artists;
     }
   }
@@ -114,7 +114,6 @@ Template.album_list.events({
     e.preventDefault();
     // console.log(e, e.currentTarget.id);
     var id = e.currentTarget.id;
-    Session.set('selected_album', id);
     var albums = Session.get('albums');
     if (!albums || Session.get('compact_results')) {
       // check whether we are in the search box
@@ -170,7 +169,8 @@ Template.album_list.helpers({
     return Session.get('album_details_' + id);
   },
   active: function() {
-    return this.id === Session.get('selected_album') ? "active" : "";
+    var album = Session.get('selected_album');
+    return album && album.items && this.id === album.items[0].id ? "active" : "";
   },
   external_ids: function() {
     var ids = [];
@@ -200,8 +200,9 @@ Template.track_list.helpers({
     var image = false;
     var albums = Session.get('albums');
     if (albums && albums.items) {
+      var selected_album = Session.get('selected_album');
       _.each(albums.items, function(album) {
-          if(album.id === Session.get('selected_album')) {
+          if(selected_album && selected_album.items && album.id === selected_album.items[0].id) {
             _.each(album.images, function(img) {
                 if(img.url) {
                   image = img;
