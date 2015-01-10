@@ -33,7 +33,7 @@ Template.searchbox.events({
           Session.set('artists', data.artists);
           Session.set('selected_artist');
           Session.set('albums');
-          Session.set('album_selected');
+          Session.set('selected_album');
           Session.set('tracks');
       });
     }
@@ -46,7 +46,7 @@ Template.searchbox.events({
           Session.set('artists');
           Session.set('selected_artist');
           Session.set('albums', data.albums);
-          Session.set('album_selected');
+          Session.set('selected_album');
           Session.set('tracks');
       });
     }
@@ -114,7 +114,7 @@ Template.album_list.events({
     e.preventDefault();
     // console.log(e, e.currentTarget.id);
     var id = e.currentTarget.id;
-    Session.set('album_selected', id);
+    Session.set('selected_album', id);
     var albums = Session.get('albums');
     if (!albums || Session.get('compact_results')) {
       // check whether we are in the search box
@@ -141,7 +141,7 @@ Template.album_list.events({
   "click .artist-label": function(e) {
     e.preventDefault();
     Session.set('selected_artist');
-    Session.set('album_selected');
+    Session.set('selected_album');
     searchArtist(e.target.id);
   }
 });
@@ -170,7 +170,7 @@ Template.album_list.helpers({
     return Session.get('album_details_' + id);
   },
   active: function() {
-    return this.id === Session.get('album_selected') ? "active" : "";
+    return this.id === Session.get('selected_album') ? "active" : "";
   },
   external_ids: function() {
     var ids = [];
@@ -201,7 +201,7 @@ Template.track_list.helpers({
     var albums = Session.get('albums');
     if (albums && albums.items) {
       _.each(albums.items, function(album) {
-          if(album.id === Session.get('album_selected')) {
+          if(album.id === Session.get('selected_album')) {
             _.each(album.images, function(img) {
                 if(img.url) {
                   image = img;
@@ -258,7 +258,7 @@ Template.track_list.events({
   "click .artist-label": function(e) {
     e.preventDefault();
     Session.set('selected_artist');
-    Session.set('album_selected');
+    Session.set('selected_album');
     searchArtist(e.target.id);
   }
 });
