@@ -119,7 +119,8 @@ Template.album_list.events({
       // check whether we are in the search box
       var search_results = Session.get('search_results');
       if (search_results.albums) {
-        Session.set('albums', search_results.albums);
+        albums = search_results.albums;
+        Session.set('albums', albums);
         Session.set('artists');
         Session.set('selected_artist');
       }
