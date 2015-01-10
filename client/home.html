@@ -45,11 +45,12 @@
 			{{> info}}
 		{{else}}
 			<div class="col-md-6" id="artist">
-				<h2>Artist</h2>
 				{{#with selected_artist}}
+					<h2>Artist</h2>
 					{{> artist_list}}
 				{{/with}}
 				{{#with artists}}
+					<h2>Artists</h2>
 					{{> artist_list}}
 				{{/with}}
 				{{#with albums}}
@@ -68,12 +69,12 @@
 </template>
 
 <template name="info">
-	<h1>SpotSearch</h1>
+	<h1>SpotSearch info</h1>
 	<div class="jumbotron">
-		<p>SpotSearch is a simple application to search through the Spotify catalogue</p>
-		<p>Please note that all searches done with this app are coming form your IP address and will be logged by Spotify</p>
-		<p>SpotSearch takes no responsibility for the correctness if the information shown on this page</p>
-		<p>This project is open source and in the public domain. See <a href="https://github.com/siggioskarsson/spotsearch">https://github.com/siggioskarsson/spotsearch</a> for the code</p>
+		<p>SpotSearch is a simple application to search through the Spotify catalogue.</p>
+		<p>Please note that all searches done with this app are coming form your IP address and will be logged by Spotify.</p>
+		<p>SpotSearch takes no responsibility for the correctness if the information shown on this page.</p>
+		<p>This project is open source and in the public domain. See <a href="https://github.com/siggioskarsson/spotsearch">https://github.com/siggioskarsson/spotsearch</a> for the code.</p>
 	</div>
 </template>
 

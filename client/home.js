@@ -196,15 +196,19 @@ Template.track_list.events({
           audioObject.pause();
         }
         var track_details = Session.get('track_details_' + id);
-        audioObject = new Audio(track_details.preview_url);
-        audioObject.play();
-        target.classList.add(playingCssClass);
-        audioObject.addEventListener('ended', function () {
-          target.classList.remove(playingCssClass);
-        });
-        audioObject.addEventListener('pause', function () {
-          target.classList.remove(playingCssClass);
-        });
+        if (track_details && track_details.preview_url) {
+          audioObject = new Audio(track_details.preview_url);
+          audioObject.play();
+          target.classList.add(playingCssClass);
+          audioObject.addEventListener('ended', function () {
+            target.classList.remove(playingCssClass);
+          });
+          audioObject.addEventListener('pause', function () {
+            target.classList.remove(playingCssClass);
+          });
+        } else {
+          alert('No preview available for this track.');
+        }
       }
     }
   }
