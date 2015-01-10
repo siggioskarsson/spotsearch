@@ -142,7 +142,7 @@
 		<li class="list-group-item artist_album {{active}}" id="{{id}}">
 			<div class="media">
 				{{#with album_details}}
-					<span class="badge pull-right">{{popularity}}</span>
+					<span class="badge pull-right" title="Popularity {{popularity}}">{{popularity}}</span>
 				{{/with}}
 				<a class="media-left" href="#">
 					{{#with image}}
@@ -158,7 +158,7 @@
 						{{/each}}
 						{{#with album_details}}
 							{{#each artists}}
-								<span class="label label-warning">{{name}}</span>
+								<span class="label label-warning artist-label" id="{{id}}">{{name}}</span>
 							{{/each}}
 							<br/>
 							{{#each external_ids}}
@@ -195,7 +195,7 @@
 				<span class="text-muted">id: {{id}}</span><br/>
 				{{#with track_details}}
 					{{#each artists}}
-						<span class="label label-warning">{{name}}</span>
+						<span class="label label-warning artist-label" id="{{id}}">{{name}}</span>
 					{{/each}}
 					<br/>
 					{{#each external_ids}}

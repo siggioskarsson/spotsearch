@@ -58,31 +58,42 @@ Template.artist_list.events({
     e.preventDefault();
     // console.log(e, e.currentTarget.id);
     var id = e.currentTarget.id;
-    var artists = Session.get('artists');
-    if (!artists) {
-      // check whether we are in the search box
-      var search_results = Session.get('search_results');
-      if (search_results.artists) {
-        artists = search_results.artists;
-      }
-    }
-    if (id && artists && artists.items) {
-      _.each(artists.items, function(artist) {
-          if (artist.id === id) {
-            Session.set('selected_artist', {items: [artist]});
-          }
-      });
-    }
-    // https://api.spotify.com/v1/artists/{id}/albums
-    $.get("https://api.spotify.com/v1/artists/" + id + "/albums", {}, function (data) {
-        //console.log(data);
-        Session.set('artists');
-        Session.set('albums', data);
-        Session.set('selected_album');
-        Session.set('tracks');
-    });
+    Session.set('selected_artist');
+    searchArtist(id);
   }
 });
+
+var searchArtist = function(id) {
+  var artists = Session.get('artists');
+  if (!artists) {
+    // check whether we are in the search box
+    var search_results = Session.get('search_results');
+    if (search_results.artists) {
+      artists = search_results.artists;
+    }
+  }
+  if (id && artists && artists.items) {
+    _.each(artists.items, function(artist) {
+        if (artist.id === id) {
+          Session.set('selected_artist', {items: [artist]});
+        }
+    });
+  }
+  if (!Session.get('selected_artist')) {
+    $.get("https://api.spotify.com/v1/artists/" + id, {}, function (data) {
+        //console.log(data);
+        Session.set('selected_artist', {items: [data]});
+    });
+  }
+  // https://api.spotify.com/v1/artists/{id}/albums
+  $.get("https://api.spotify.com/v1/artists/" + id + "/albums", {}, function (data) {
+      //console.log(data);
+      Session.set('artists');
+      Session.set('albums', data);
+      Session.set('selected_album');
+      Session.set('tracks');
+  });
+};
 
 Template.artist_list.helpers({
   image: function() {
@@ -126,6 +137,12 @@ Template.album_list.events({
         //console.log(data);
         Session.set('tracks', data);
     });
+  },
+  "click .artist-label": function(e) {
+    e.preventDefault();
+    Session.set('selected_artist');
+    Session.set('album_selected');
+    searchArtist(e.target.id);
   }
 });
 
@@ -237,5 +254,11 @@ Template.track_list.events({
         }
       }
     }
+  },
+  "click .artist-label": function(e) {
+    e.preventDefault();
+    Session.set('selected_artist');
+    Session.set('album_selected');
+    searchArtist(e.target.id);
   }
 });
