@@ -96,7 +96,10 @@
 					{{> album_list}}
 				{{/with}}
 				{{#with $.Session.get 'tracks'}}
-					<h2>Tracks</h2>
+					<h2>
+						Tracks
+						<a href="#" class="exportTracks"><i class="glyphicon glyphicon-export pull-right"></i></a>
+					</h2>
 					{{> track_list}}
 				{{/with}}
 			</div>
@@ -161,6 +164,9 @@
 								<span class="label label-warning artist-label" id="{{id}}">{{name}}</span>
 							{{/each}}
 							<br/>
+							{{#each copyrights}}
+								&copy;: {{type}}, {{text}}<br/>
+							{{/each}}
 							{{#each external_ids}}
 								{{key}}: {{id}}
 							{{/each}}
