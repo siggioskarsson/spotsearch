@@ -7,20 +7,25 @@ Template.results.events({
     var csvArr = ["Artist;Album title;Album upc;Track name;Track isrc\r\n"];
     var currentArtist = Session.get('selected_artist');
     var currentAlbum = Session.get('selected_album');
-    if (currentArtist && currentArtist.items && currentArtist.items[0] && currentAlbum && currentAlbum.items && currentAlbum.items[0]) {
-      currentArtist = currentArtist.items[0];
+    if (currentAlbum && currentAlbum.items && currentAlbum.items[0]) {
+      currentArtist = currentArtist && currentArtist.items && currentArtist.items[0] ? currentArtist.items[0] : false;
       currentAlbum = currentAlbum.items[0];
       currentAlbumDetails = Session.get('album_details_' + currentAlbum.id);
       //console.log(currentArtist, currentAlbum, currentAlbumDetails);
       _.each(this.items, function(track) {
         var trackDetails = Session.get('track_details_' + track.id);
-        //console.log(track);
+        if (currentArtist) {
+          var artist = currentArtist;
+        } else {
+          var artist = track && track.artists && track.artists[0] ? track.artists[0] : {name: "Unknown"};
+        }
+        console.log(track);
         //Artist;Album title;Album upc;Track name;Track isrc
-        csvArr.push('"' + currentArtist.name + '";"' + currentAlbum.name + '";"' + currentAlbumDetails.external_ids.upc + '";"' + track.name + '";"' + trackDetails.external_ids.isrc + "\"\r\n");
+        csvArr.push('"' + artist.name + '";"' + currentAlbum.name + '";"' + currentAlbumDetails.external_ids.upc + '";"' + track.name + '";"' + trackDetails.external_ids.isrc + "\"\r\n");
       });
       var pom = document.createElement('a');
       pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csvArr.join("")));
-      pom.setAttribute('download', "spotsearch_export_" + currentArtist.name.replace(/ /g, '_') + '_-_' + currentAlbum.name.replace(/ /g, '_') + ".csv");
+      pom.setAttribute('download', "spotsearch_export_" + (currentArtist ? currentArtist.name.replace(/ /g, '_') : "Various_Artists") + '_-_' + currentAlbum.name.replace(/ /g, '_') + ".csv");
       pom.click();
       //var newWindow = window.open('', "win", "width=640,height=480");
       //newWindow.document.write("<pre>" + csvArr.join(""));
