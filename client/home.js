@@ -58,8 +58,8 @@ Template.searchbox.events({
           Session.set('search_results', data);
       });
   },
-  "keyup .artist": function(e) {
-    if (e.keyCode == 13) {
+  "keyup .artist, click #search_artist": function(e) {
+    if (e.keyCode == 13 || e.type == 'click') {
       // https://api.spotify.com/v1/search?q=tania%20bowra&type=artist
       $.get("https://api.spotify.com/v1/search?q=" + $('.artist').val() + "&type=artist&limit=50", {}, function (data) {
           //console.log(data);
@@ -71,8 +71,8 @@ Template.searchbox.events({
       });
     }
   },
-  "keyup .album": function(e) {
-    if (e.keyCode == 13) {
+  "keyup .album, click #search_album": function(e) {
+    if (e.keyCode == 13 || e.type == 'click') {
       // https://api.spotify.com/v1/search?q=tania%20bowra&type=artist
       $.get("https://api.spotify.com/v1/search?q=" + $('.album').val() + "&type=album&limit=50", {}, function (data) {
           //console.log(data);
