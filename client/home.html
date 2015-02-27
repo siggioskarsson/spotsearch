@@ -105,7 +105,7 @@
 					<h2>Album</h2>
 					{{> album_list}}
 				{{/with}}
-				{{#with $.Session.get 'tracks'}}
+				{{#with albumTracks}}
 					<h2>
 						Tracks
 						<a href="#" class="exportTracks"><i class="glyphicon glyphicon-export pull-right"></i></a>

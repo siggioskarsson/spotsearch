@@ -1,5 +1,15 @@
 var audioObject = null;
 
+Template.results.helpers({
+  albumTracks: function() {
+    var tracks = Session.get('tracks');
+    tracks.items.sort(function(a,b) {
+      return parseInt(a.track_number) - parseInt(b.track_number);
+    });
+    return tracks;
+  }
+});
+
 Template.results.events({
   "click .exportTracks": function(e) {
     e.preventDefault();
@@ -31,7 +41,7 @@ Template.results.events({
       //newWindow.document.write("<pre>" + csvArr.join(""));
     }
   }
-})
+});
 
 Template.searchbox.events({
   "click .info": function(e) {
@@ -167,8 +177,18 @@ Template.album_list.events({
     }
     // https://api.spotify.com/v1/artists/{id}/albums
     $.get("https://api.spotify.com/v1/albums/" + id + "/tracks", {}, function (data) {
-        //console.log(data);
-        Session.set('tracks', data);
+      //console.log(data);
+      var trackData = data;
+      Session.set('tracks', trackData);
+
+      var currentTracks = 50;
+      while (data.total > currentTracks) {
+        $.get("https://api.spotify.com/v1/albums/" + id + "/tracks?offset=" + currentTracks, {}, function (data2) {
+          trackData.items = trackData.items.concat(data2.items);
+          Session.set('tracks', trackData);
+        });
+        currentTracks+= 50;
+      }
     });
   },
   "click .artist-label": function(e) {
