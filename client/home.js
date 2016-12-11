@@ -125,12 +125,12 @@ Template.searchbox.events({
             Session.set('compact_results', false);
         }, 200);
     },
-    "keyup .search": function (e) {
+    "keyup .search": _.debounce(function (e) {
         callUrl("https://api.spotify.com/v1/search?q=" + $('.search').val() + "&type=artist,album&limit=10", {}, function (data) {
             //console.log(data);
             Session.set('search_results', data);
         });
-    },
+    }, 300),
     "keyup .artist, click #search_artist": function (e) {
         if (e.keyCode == 13 || e.type == 'click') {
             // https://api.spotify.com/v1/search?q=tania%20bowra&type=artist
