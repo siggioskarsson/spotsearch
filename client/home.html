@@ -12,20 +12,23 @@
 
 <template name="searchbox">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-6 col-xs-12">
 			<h2>
 				<img src="/img/spotify.png" style="height: 43px" />
-				<i class="glyphicon glyphicon-search"></i> - 
+				<i class="glyphicon glyphicon-search"></i> -
 				SpotSearch
 				<span class="pull-right">
 					<i class="glyphicon glyphicon-info-sign info"></i>
+					<span title="{{#if userIsLoggedIn}}Logged on{{else}}Login to get more results from Spotify{{/if}}" class="user-login {{#if userIsLoggedIn}}loggedin{{/if}}">
+						<i class="glyphicon glyphicon-user"></i>
+					</span>
 				</span>
 			</h2>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-6 col-xs-12">
 			<div class="input-group input-sm">
 				<span class="input-group-addon"><img src="/img/spotify.png" style="height: 20px" /></span>
-				<input type="text" class="form-control search" name="artist" placeholder="Search - experimental">
+				<input type="text" class="form-control search" name="artist" placeholder="Search artist or album">
 			</div>
 			{{#if $.Session.get 'search_results_show'}}
 				<div class="search_results_show">
@@ -143,7 +146,7 @@
 						<span class="label label-primary">{{this}}</span>
 					{{/each}}
 				</div>
-			</div>			
+			</div>
 		</li>
 	{{/each}}
 	</ul>
@@ -183,7 +186,7 @@
 						{{/with}}
 					</div>
 				</div>
-			</div>			
+			</div>
 		</li>
 	{{/each}}
 	</ul>
@@ -219,7 +222,7 @@
 					{{/each}}
 				{{/with}}
 				</div>
-			</div>			
+			</div>
 		</li>
 	{{/each}}
 	</ul>
