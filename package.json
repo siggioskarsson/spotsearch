@@ -1,0 +1,11 @@
+{
+  "name": "Spotsearch",
+  "description": "Search through the spotify catalogue",
+  "version": "0.0.1",
+  "repository": "https://github.com/siggioskarsson/spotsearch",
+  "license": "CC-BY-4.0",
+  "dependencies": {
+    "babel-runtime": "^6.20.0"
+  },
+  "devDependencies": {}
+}
